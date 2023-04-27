@@ -1,2 +1,22 @@
 @import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
 
+.checkbox {
+    display: flex;
+}
+
+.entry_tag_container {
+    display: flex;
+    flex-direction: row;
+}
+
+.entry__tag {
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-style: oblique;
+    font-size: 12px;
+}
+
+.entry__tag:hover {
+    font-size: 14px;
+}

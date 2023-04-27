@@ -27,6 +27,11 @@ export const Entry = ({ entry, mood, onEditButtonClick, onDeleteButtonClick }) =
         <section id={`mood--${mood?.id}`}>
             <div>My mood was {mood?.label} when I learned this</div>
         </section>
+        <section className="entry_tag_container">
+        {entry.tags.map(tag => 
+          <p className="entry__tag" id={`tag--${tag?.id}`}>{tag?.name}</p>
+          )}
+          </section>
         <div className="buttons">
           <button className={`button ${getMessageType()} is-outlined`} onClick={
             () => {

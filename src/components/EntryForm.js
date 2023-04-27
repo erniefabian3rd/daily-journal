@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react"
 
-export const EntryForm = ({ entry, moods, onFormSubmit }) => {
+export const EntryForm = ({ entry, moods, onFormSubmit, tags }) => {
     const [editMode, setEditMode] = useState(false)
     const [updatedEntry, setUpdatedEntry] = useState(entry)
+    const [selectedTags, setSelectedTags] = useState([])
 
     useEffect(() => {
         setUpdatedEntry(entry)
@@ -19,20 +20,31 @@ export const EntryForm = ({ entry, moods, onFormSubmit }) => {
             When changing a state object or array, always create a new one
             and change state instead of modifying current one
         */
-        const newEntry ={...updatedEntry}
-        newEntry[event.target.name] = event.target.value
-        setUpdatedEntry(newEntry)
+        const newEntry = { ...updatedEntry }
+        const { name, value, type, checked } = event.target
+        if (type === "checkbox") {
+            if (checked) {
+                setSelectedTags([...selectedTags, value])
+            } else {
+                setSelectedTags(selectedTags.filter(tag => tag !== value))
+            }
+        } else {
+            newEntry[name] = value
+            setUpdatedEntry(newEntry)
+        }
     }
-
+    
 
 
     const constructNewEntry = () => {
         const copyEntry = { ...updatedEntry }
         copyEntry.mood_id = parseInt(copyEntry.mood_id)
+        copyEntry.tags = selectedTags
         if (!copyEntry.date) {
             copyEntry.date = Date(Date.now()).toLocaleString('en-us').split('GMT')[0]
         }
         onFormSubmit(copyEntry)
+        setSelectedTags([])
     }
 
     return (
@@ -81,11 +93,30 @@ export const EntryForm = ({ entry, moods, onFormSubmit }) => {
                         </div>
                     </div>
                     <div className="field">
+                        <label htmlFor="tag_id" className="label">Tags:</label>
+                        <div className="control">
+                            {tags.map((tag) => (
+                                <label key={tag.id} className="checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="tags"
+                                        className="checkbox"
+                                        value={tag.id}
+                                        checked={updatedEntry.checked}
+                                        onChange={handleControlledInputChange}
+                                        />
+                                        {tag.name}
+                                </label>
+                                ))}
+                        </div>
+                    </div>
+                    <div className="field">
                         <div className="control">
                             <button type="submit"
                                 onClick={evt => {
                                     evt.preventDefault()
                                     constructNewEntry()
+                                    setSelectedTags([])
                                 }}
                                 className="button is-link">
                                 {editMode ? "Update" : "Save"}
